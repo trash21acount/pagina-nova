@@ -1,0 +1,216 @@
+.root {
+  position: relative;
+  isolation: isolate;
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+  font-family: Inter, sans-serif;
+  background: #040405;
+  color: white;
+  z-index: 0;
+  transition: filter 0.2s ease, opacity 0.2s ease;
+}
+
+.root.dimmed {
+  filter: blur(2px);
+  opacity: 0.7;
+  pointer-events: none;
+}
+
+.root * {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+.root *::before,
+.root *::after {
+  box-sizing: border-box;
+}
+
+.root button {
+  font: inherit;
+  color: inherit;
+}
+
+.root .canvas {
+  position: fixed;
+  inset: 0;
+  z-index: -2;
+}
+
+.root .bgGlow {
+  position: fixed;
+  inset: -20%;
+  background:
+    radial-gradient(circle at 30% 30%, rgba(0, 170, 255, 0.12), transparent 35%),
+    radial-gradient(circle at 80% 70%, rgba(255, 255, 255, 0.05), transparent 30%);
+  animation: bgMove 12s ease-in-out infinite alternate;
+  filter: blur(80px);
+  z-index: -1;
+}
+
+@keyframes bgMove {
+  from {
+    transform: translate(-5%, -5%) rotate(-5deg);
+  }
+  to {
+    transform: translate(5%, 5%) rotate(5deg);
+  }
+}
+
+.root .scene {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.root .landingScene {
+  flex-direction: column;
+  gap: 40px;
+}
+
+.root .landingSceneExiting {
+  animation: landingExit 360ms cubic-bezier(0.2, 0.9, 0.2, 1) forwards;
+}
+
+.root .title {
+  font-size: 65px;
+  font-weight: 900;
+  font-family: Outfit, sans-serif;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  opacity: 0.95;
+}
+
+.root .subtitle {
+  opacity: 0.55;
+  letter-spacing: 0.2em;
+}
+
+.root .enter {
+  padding: 18px 55px;
+  font-size: 18px;
+  border: none;
+  border-radius: 999px;
+  background: white;
+  color: #040405;
+  cursor: pointer;
+  transition: 0.4s;
+  animation: pulse 2.3s infinite;
+}
+
+.root .enter:hover {
+  transform: scale(1.08);
+}
+
+.root .enterLabel {
+  display: inline-block;
+  pointer-events: none;
+  transition: transform 0.15s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+.root .magWrap {
+  display: inline-flex;
+  position: relative;
+  transition: transform 0.15s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+@keyframes pulse {
+  0%,
+  100% {
+    box-shadow: 0 0 0 0 rgba(255, 255, 255, 0.35);
+  }
+  50% {
+    box-shadow: 0 0 0 22px rgba(255, 255, 255, 0);
+  }
+}
+
+@keyframes landingExit {
+  0% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(-10px) scale(0.97);
+  }
+}
+
+.root .authScene {
+  animation: authEnter 360ms cubic-bezier(0.2, 0.9, 0.2, 1) both;
+}
+
+@keyframes authEnter {
+  0% {
+    opacity: 0;
+    transform: translateY(10px) scale(0.985);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.root .cards {
+  display: flex;
+  gap: 60px;
+  perspective: 1800px;
+}
+
+.root .card {
+  width: 420px;
+  height: 540px;
+  border-radius: 28px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(18px);
+  position: relative;
+  overflow: hidden;
+  cursor: pointer;
+  transform-style: preserve-3d;
+  transition: transform 0.1s ease-out;
+  will-change: transform;
+}
+
+.root .card::before {
+  content: "";
+  position: absolute;
+  inset: -40%;
+  background: radial-gradient(circle at var(--gx, 50%) var(--gy, 50%), rgba(0, 170, 255, 0.28), transparent 45%);
+  opacity: 0;
+  transition: 0.3s;
+}
+
+.root .card:hover::before {
+  opacity: 1;
+}
+
+.root .cardContent {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 25px;
+  transform: translateZ(70px);
+}
+
+.root .big {
+  font-size: 40px;
+  font-weight: 800;
+}
+
+.root .small {
+  opacity: 0.65;
+  text-align: center;
+  width: 75%;
+  line-height: 1.6;
+}
+
+.root .cardAction {
+  margin-top: 32px;
+}
+
