@@ -1,0 +1,21 @@
+const { chromium } = require('playwright');
+(async () => {
+  const browser = await chromium.launch({ headless: true });
+  const context = await browser.newContext({ baseURL: 'http://localhost:3000' });
+  const page = await context.newPage();
+  page.on('console', msg => console.log('CONSOLE', msg.text()));
+  await page.goto('/documento');
+  await page.waitForTimeout(2000);
+  await page.waitForSelector('button:has-text("Fazer login")', { state: 'visible', timeout: 10000 });
+  await page.click('button:has-text("Fazer login")', { force: true });
+  await page.waitForSelector('[role="dialog"]', { state: 'visible', timeout: 10000 });
+  await page.fill('#login-modal-username', 'luiz');
+  await page.fill('#login-modal-password', 'luiz123');
+  await page.click('button:has-text("Entrar")', { force: true });
+  const logoutVisible = await page.locator('button:has-text("Sair")').isVisible().catch(() => false);
+  console.log('logout visible', logoutVisible);
+  const body = await page.evaluate(() => document.body.innerText.slice(0, 1000));
+  console.log('body snippet', body);
+  await page.screenshot({ path: 'tmp-login-complete.png', fullPage: true });
+  await browser.close();
+})();

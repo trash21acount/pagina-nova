@@ -1,0 +1,22 @@
+const { chromium } = require('@playwright/test');
+(async () => {
+  const browser = await chromium.launch({ headless: true });
+  const page = await browser.newPage();
+  page.on('console', msg => console.log('console>', msg.type(), msg.text()));
+  page.on('pageerror', err => console.log('pageerror>', err.message));
+  page.on('requestfailed', req => console.log('requestfailed>', req.url(), req.failure()?.errorText));
+  await page.goto('http://localhost:3000/documento');
+  console.log('readyState', await page.evaluate(() => document.readyState));
+  console.log('title', await page.title());
+  await page.waitForTimeout(5000);
+  console.log('after wait readyState', await page.evaluate(() => document.readyState));
+  const loginTrigger = page.locator('button', { hasText: 'Fazer login' }).first();
+  console.log('login trigger count', await loginTrigger.count());
+  console.log('login trigger html', await loginTrigger.evaluate(el => el.outerHTML));
+  await loginTrigger.click({ force: true });
+  await page.waitForTimeout(2000);
+  console.log('dialog count', await page.locator('[role="dialog"]').count());
+  console.log('body html length', (await page.locator('body').innerHTML()).length);
+  await page.screenshot({ path: 'tmp-login-screenshot.png', fullPage: true });
+  await browser.close();
+})();

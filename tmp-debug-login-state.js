@@ -1,0 +1,24 @@
+const { chromium } = require('playwright');
+(async () => {
+  const browser = await chromium.launch({ headless: true });
+  const context = await browser.newContext({ baseURL: 'http://localhost:3000' });
+  const page = await context.newPage();
+  page.on('console', (msg) => console.log('CONSOLE', msg.text()));
+  await page.goto('/documento');
+  await page.waitForTimeout(2000);
+  await page.click('button:has-text("Fazer login")');
+  await page.waitForTimeout(2000);
+  const dialogCount = await page.locator('[role="dialog"]').count();
+  console.log('dialog count', dialogCount);
+  const dialogText = await page.locator('[role="dialog"]').innerText().catch(() => 'no dialog');
+  console.log('dialog innerText', dialogText);
+  const buttonTexts = await page.locator('button').allTextContents();
+  console.log('buttons', buttonTexts);
+  await page.click('button:has-text("Entrar")', { force: true });
+  await page.waitForTimeout(2000);
+  const buttonsAfter = await page.locator('button').allTextContents();
+  console.log('buttons after login', buttonsAfter);
+  const s = await page.locator('button:has-text("Sair")').count();
+  console.log('logout button count', s);
+  await browser.close();
+})();
